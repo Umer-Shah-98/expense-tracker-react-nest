@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { categoryActions } from "../../store/category-slice";
+import { addCategory } from "../../store/category-slice";
 const AddCategoryForm = () => {
   const user = useSelector((state) => state.auth.userData);
   const userData = user?.user;
@@ -44,7 +45,6 @@ const AddCategoryForm = () => {
       setIsCategoryValid(false);
       setCategoryHelperText("Category Name must be at least three characters");
     } else {
-      console.log(categoryName);
       const categoryNameFormatted =
         categoryName.slice(0, 1).toUpperCase() +
         categoryName.slice(1).toLocaleLowerCase();
@@ -52,22 +52,16 @@ const AddCategoryForm = () => {
       setCategoryHelperText("");
       try {
         setLoader(true);
-        const response = await axios.post(
-          `http://localhost:3000/categories/create`,
-          {
-            ...categoryDetails,
-            categoryName: categoryNameFormatted,
-          }
-        );
-        const { data } = response;
-        const error = data?.error;
-        if (error) {
-          throw error;
+        const categoryData = {
+          ...categoryDetails,
+          categoryName: categoryNameFormatted,
+        };
+        const newCategory = await addCategory(categoryData);
+        if (!newCategory.success) {
+          throw Error(newCategory.error);
         } else {
-          console.log(data);
           toast.success(`Category is added successfully`);
           setLoader(false);
-          dispatch(categoryActions.updateCategory(data));
           setCategoryDetails({
             ...categoryDetails,
             categoryName: "",
@@ -75,12 +69,7 @@ const AddCategoryForm = () => {
         }
       } catch (error) {
         setLoader(false);
-        const errorMessage = error?.response?.data?.message;
-        if (errorMessage) {
-          toast.error(`${errorMessage}`);
-        } else {
-          toast.error(`${error}`);
-        }
+        toast.error(`${error}`);
       }
     }
   };
@@ -97,12 +86,17 @@ const AddCategoryForm = () => {
         <Typography
           variant="h5"
           align="center"
-          sx={{ fontFamily: "Poppins", fontWeight: "medium", mt: 2,color:'purple' }}
+          sx={{
+            fontFamily: "Poppins",
+            fontWeight: "medium",
+            mt: 2,
+            color: "purple",
+          }}
         >
           Add Category
         </Typography>
         <Box component="form" sx={{ m: 5 }} onSubmit={handleSubmit}>
-          <Box className='flex justify-around items-center md:flex-col'>
+          <Box className="flex justify-around items-center md:flex-col">
             <FormControl>
               <TextField
                 margin="normal"

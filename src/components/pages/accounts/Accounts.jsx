@@ -6,12 +6,7 @@ import AddAccountForm from "../../addAccountForm/AddAccountForm";
 
 const Accounts = () => {
   const accounts = useSelector((state) => state.account.accounts);
-  const total = useSelector((state) => state.account.totalBalance);
-  const user = useSelector((state) => state.auth.userData);
-  const userData = user?.user;
-  const userId = userData?.id;
-  // console.log(accounts);
-  // console.log(total);
+
   return (
     <>
       <Box className="accounts-page">
@@ -22,7 +17,11 @@ const Accounts = () => {
           <Typography
             variant="h5"
             align="center"
-            sx={{ fontFamily: "Poppins", fontWeight: "medium",color:'purple' }}
+            sx={{
+              fontFamily: "Poppins",
+              fontWeight: "medium",
+              color: "purple",
+            }}
           >
             Accounts Details
           </Typography>

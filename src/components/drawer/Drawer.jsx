@@ -31,6 +31,7 @@ import Transaction from "../pages/transactions/Transaction";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../store/auth-slice";
 import { Footer } from "../footer/Footer";
+import { logoutUser } from "../../store/auth-slice";
 const drawerWidth = 170;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -93,9 +94,8 @@ export default function MyDrawer() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    logoutUser();
     navigate("/login");
-    dispatch(authActions.deleteUser());
   };
   return (
     <Box sx={{ display: "flex" }}>

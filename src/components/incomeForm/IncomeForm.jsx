@@ -1,28 +1,22 @@
 import React, { useState } from "react";
-import { Box, Button, FormControl, TextField } from "@mui/material";
+import { Box, FormControl, TextField } from "@mui/material";
 import { textFields } from "../../styles";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import Select from "@mui/material/Select";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { transactionActions } from "../../store/transaction-slice";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { categoryActions } from "../../store/category-slice";
-import { accountActions } from "../../store/account-slice";
 
+import { addTransaction } from "../../store/transaction-slice";
 const IncomeForm = () => {
   const accounts = useSelector((state) => state.account.accounts);
   const categories = useSelector((state) => state.category.categories);
-  const transactions = useSelector((state) => state.transaction.transactions);
   const user = useSelector((state) => state.auth.userData);
   const userData = user?.user;
   const userId = userData?.id;
-  // console.log(accounts);
-  // console.log(categories);
-  // console.log(transactions);
+
   const [transactionDetails, setTransactionDetails] = useState({
     amount: "",
     categoryId: "",
@@ -39,7 +33,6 @@ const IncomeForm = () => {
   const [bankHelperText, setBankHelperText] = useState(""); // Helper text for email
   const [categoryHelperText, setCategoryHelperText] = useState(""); // Helper text for password
   const [loader, setLoader] = useState(false);
-  const dispatch = useDispatch();
   const handleBlur = () => {};
   const handleChange = (e) => {
     const { name, value } = e.target; // Get the name and value of the input
@@ -111,36 +104,31 @@ const IncomeForm = () => {
       console.log(transactionDetails);
       try {
         setLoader(true);
-        const response = await axios.post(
-          `http://localhost:3000/transactions/create`,
-          { ...transactionDetails, amount: parseFloat(amount) }
-        );
-        const { data } = response;
-        const error = response?.data?.error;
-        if (error) {
-          throw error;
-        } else {
-          dispatch(transactionActions.updateTransaction(data));
-          //updating category data
-          dispatch(
-            categoryActions.updateCategoryAmount({
-              type,
-              amount: parseFloat(amount),
-              categoryId,
-            })
-          );
-          //updating account data
-          dispatch(
-            accountActions.updateAccountAmount({
-              type,
-              amount: parseFloat(amount),
-              accountId,
-              createdAt: data.createdAt,
-            })
-          );
+        const transactionData = {
+          ...transactionDetails,
+          amount: parseFloat(amount),
+        };
+        const categoryData = {
+          type,
+          amount: parseFloat(amount),
+          categoryId,
+        };
 
-          //updating transaction history
-          dispatch(transactionActions.updateRecentTransaction(data));
+        const accountData = {
+          type,
+          amount: parseFloat(amount),
+          accountId,
+          // createdAt: data.createdAt, this must be updated at store in transaction-slice file
+        };
+        const newTransaction = await addTransaction(
+          transactionData,
+          categoryData,
+          accountData
+        );
+        console.log(newTransaction);
+        if (!newTransaction.success) {
+          throw Error(newTransaction.error);
+        } else {
           toast.success("Transaction is successful");
           setTransactionDetails({
             ...transactionDetails,
@@ -149,15 +137,12 @@ const IncomeForm = () => {
             amount: "",
           });
         }
-        console.log(data);
+        setLoader(false);
       } catch (error) {
         console.log(error);
-        const errorMessage = error?.response?.data?.message;
-        console.log(errorMessage);
-        toast.error(`${error}`);
+        toast.error(`${error.message}`);
         setLoader(false);
       }
-      setLoader(false);
     }
   };
 

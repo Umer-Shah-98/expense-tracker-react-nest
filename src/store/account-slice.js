@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { dispatch } from "./index.js";
 const totalBalance = (accounts) => {
   return accounts.reduce((total, account) => total + account.balance, 0);
 };
@@ -23,7 +25,7 @@ const accountSlice = createSlice({
     },
     updateAccountAmount(state, action) {
       const account = action.payload;
-      const { accountId, type, amount,createdAt } = account;
+      const { accountId, type, amount, createdAt } = account;
 
       // Find the index of the category in the state array
       const accountIndex = state.accounts.findIndex(
@@ -41,7 +43,6 @@ const accountSlice = createSlice({
         } else if (type === "EXPENSE") {
           updatedAccount.balance -= amount;
           updatedAccount.updatedAt = createdAt;
-
         }
 
         // Create a new state object with the updated category
@@ -61,3 +62,36 @@ const accountSlice = createSlice({
 });
 export const accountActions = accountSlice.actions;
 export default accountSlice;
+
+//fetching accounts from Database
+export const fetchAccounts = async (id) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:3000/accounts/find_all/${id}`
+    );
+    const accounts = response.data;
+    dispatch(accountActions.addAccount(accounts));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//creating new account
+export const createBankAccount = async (accountData) => {
+  try {
+    const response = await axios.post(
+      `http://localhost:3000/accounts/create`,
+      accountData
+    );
+    const data = response.data;
+    const error = data?.error;
+    if (error) {
+      throw error;
+    } else {
+      dispatch(accountActions.updateAccount(data));
+      return { success: true, data: data };
+    }
+  } catch (error) {
+    return { success: false, error: error };
+  }
+};

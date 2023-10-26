@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Layout from "../../layout/Layout";
 import AmountCard from "../../amountCard/AmountCard";
 import { Typography, Box, Grid } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
@@ -11,49 +10,18 @@ import SchoolIcon from "@mui/icons-material/School";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import TransactionForm from "../../transactionForm/TransactionForm";
-import { accountActions } from "../../../store/account-slice";
 import axios from "axios";
 import { toast } from "react-toastify";
-import categorySlice, { categoryActions } from "../../../store/category-slice";
 import { categoryIconMap } from "../../../constants/categoriesIconMap";
 import AddCategoryForm from "../../addCategoryForm/AddCategoryForm";
 import { transactionActions } from "../../../store/transaction-slice";
-import TransactionsTable from "../../transactionTable/TransactionTable";
 import RecentTransactionsTable from "../../recentTransactionsTable/RecentTransactionsTable";
 import PaidIcon from "@mui/icons-material/Paid";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { getRandomColorAndIcon } from "../../../utils";
 import { PieChart } from "../../chart/PieChart";
-import IconOne from "../../../assets/cat-icon-1.png";
-// import Example from "../../chart/PieChart";
-// export const colorPairs = [
-//   { cardColor: "#f5f5f5", iconWrapperColor: "#333" }, // Example light and dark colors
-//   { cardColor: "#e0e0e0", iconWrapperColor: "#444" },
-//   { cardColor: "#dcdcdc", iconWrapperColor: "#555" },
-//   // Add more color pairs as needed
-// ];
-
-// // Define an array of possible icons for categories
-// export const randomIcons = [
-//   <AttachMoneyIcon fontSize="large" sx={{ color: "white" }} />,
-//   <MonetizationOnIcon fontSize="large" sx={{ color: "white" }} />,
-//   <PaidIcon fontSize="large" sx={{ color: "white" }} />,
-//   <CurrencyExchangeIcon fontSize="large" sx={{ color: "white" }} />,
-//   <ShoppingCartCheckoutIcon fontSize="large" sx={{ color: "white" }} />,
-//   <AddShoppingCartIcon fontSize="large" sx={{ color: "white" }} />,
-// ];
-
-// export const getRandomColorAndIcon = () => {
-//   const randomPair = colorPairs[Math.floor(Math.random() * colorPairs.length)];
-
-//   // const randomIcon =
-//   //   randomIcons[Math.floor(Math.random() * randomIcons.length)];
-//   return { randomPair: randomPair };
-// };
+import { fetchAccounts } from "../../../store/account-slice";
+import { fetchCategories } from "../../../store/category-slice";
+import { fetchTransactions } from "../../../store/transaction-slice";
 
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.userData);
@@ -73,62 +41,11 @@ const Dashboard = () => {
     ["Task", "Hours per Day"],
     ["Incomes", totalIncomeAmount],
     ["Expenses", totalExpenseAmount],
-    //   ["Commute", 2],
-    //   ["Watch TV", 2],
-    //   ["Sleep", 7],
   ];
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [categoriesNotFound, setCategoriesNotFound] = useState(false);
 
-  const fetchAccounts = async (id) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/accounts/find_all/${id}`
-      );
-      const accounts = response.data;
-      dispatch(accountActions.addAccount(accounts));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchCategories = async (id) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/categories/find_all/${id}`
-      );
-      const categories = response.data;
-      const error = response?.data?.error;
-      if (error) {
-        console.log(error);
-        throw error;
-      } else {
-        dispatch(categoryActions.addCategory(categories));
-      }
-    } catch (error) {
-      setCategoriesNotFound(true);
-      console.log(error);
-    }
-  };
-
-  const fetchTransactions = async (id) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/transactions/find_all/${id}`
-      );
-      const data = response.data;
-      const error = data.error;
-      if (error) {
-        throw error;
-      } else {
-        dispatch(transactionActions.addTransaction(data));
-        return data;
-      }
-    } catch (error) {
-      toast.error(`${error}`);
-    }
-  };
   const fetchRecentTransactions = async (id) => {
     try {
       const response = await axios.get(
@@ -154,10 +71,16 @@ const Dashboard = () => {
     fetchCategories(userId)
       .then(() => setLoading(false))
       .catch((error) => {
-        console.log(error);
+        console.log(error.error);
         setCategoriesNotFound(true);
       });
-    fetchTransactions(userId);
+    fetchTransactions(userId)
+      .then((res) => {
+        if (!res.success) {
+          throw Error(res.error);
+        }
+      })
+      .catch((error) => toast.error(`${error}`));
     fetchRecentTransactions(userId);
   }, [user]);
 
@@ -172,7 +95,7 @@ const Dashboard = () => {
             sx={{
               color: "purple",
               fontFamily: "Poppins",
-              fontSize: { xs: "16px", sm: "22px", md: "30px",},
+              fontSize: { xs: "16px", sm: "22px", md: "30px" },
             }}
           >
             Welcome {user?.user?.username}

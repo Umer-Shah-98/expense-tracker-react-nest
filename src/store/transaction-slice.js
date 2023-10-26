@@ -1,4 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { dispatch } from ".";
+import { categoryActions } from "./category-slice";
+import { accountActions } from "./account-slice";
 const transactionSlice = createSlice({
   name: "transaction",
   initialState: {
@@ -59,3 +63,63 @@ function calculateTotalAmount(transactions, type) {
 }
 export const transactionActions = transactionSlice.actions;
 export default transactionSlice;
+
+//fetching transactions from Database
+export const fetchTransactions = async (id) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:3000/transactions/find_all/${id}`
+    );
+    const data = response.data;
+    const error = data.error;
+    if (error) {
+      throw error;
+    } else {
+      dispatch(transactionActions.addTransaction(data));
+      return { success: true, data: data };
+    }
+  } catch (error) {
+    return { success: false, error: error };
+  }
+};
+
+//adding transaction to the Database (income)
+
+export const addTransaction = async (
+  transactionData,
+  categoryData,
+  accountData
+) => {
+  try {
+    const response = await axios.post(
+      `http://localhost:3000/transactions/create`,
+      transactionData
+    );
+    const data = response.data;
+    console.log(data);
+    const error = data?.error;
+    console.log(error);
+    if (error) {
+      throw error;
+    } else {
+      //updating transactions
+      dispatch(transactionActions.updateTransaction(data));
+      //updating category data
+      dispatch(categoryActions.updateCategoryAmount(categoryData));
+      //updating account data
+      dispatch(
+        accountActions.updateAccountAmount({
+          ...accountData,
+          createdAt: data.createdAt,
+        })
+      );
+
+      //updating recent transaction history
+      dispatch(transactionActions.updateRecentTransaction(data));
+      return { success: true, data: data };
+    }
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: error };
+  }
+};

@@ -1,30 +1,17 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { emailPattern } from "../../../utils/index.js";
-import {
-  CssBaseline,
-  AppBar,
-  Toolbar,
-  Box,
-  Typography,
-  Grid,
-  ThemeProvider,
-  ButtonGroup,
-  Avatar,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Button,
-  Container,
-} from "@mui/material";
+import { createAccount } from "../../../store/auth-slice.js";
+import { Box, Typography, Avatar, TextField } from "@mui/material";
 import { textFields } from "../../../styles/index.js";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
-
-// import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Copyright from "../../copyright/Copyright";
 import Header from "../../header/Header";
-import axios from "axios";
 import { toast } from "react-toastify";
 const SignUp = () => {
   const [credentials, setCredentials] = useState({
@@ -39,13 +26,18 @@ const SignUp = () => {
   const [emailHelperText, setEmailHelperText] = useState(""); // Helper text for email
   const [passwordHelperText, setPasswordHelperText] = useState(""); // Helper text for password
   const [loader, setLoader] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "password") {
-      if (value.length < 5) {
+      if (value.length < 6) {
         setIsPasswordValid(false);
-        setPasswordHelperText("Password must be at least 5 characters long");
+        setPasswordHelperText("Password must be at least 6 characters long");
       } else {
         setIsPasswordValid(true);
         setPasswordHelperText("");
@@ -71,19 +63,16 @@ const SignUp = () => {
     const { name, value } = e.target;
     const emailRegex = emailPattern;
     if (name === "username") {
-      console.log("lo");
       if (value.length < 3) {
         setIsUsernameValid(false);
-        setUsernameHelperText("Username must be at least 4 characters");
+        setUsernameHelperText("Username must be at least 3 characters");
       } else {
         setIsUsernameValid(true);
         setUsernameHelperText("");
       }
     }
     if (name === "email") {
-      console.log("li");
       if (!emailRegex.test(value)) {
-        console.log("ui");
         setIsEmailValid(false);
         setEmailHelperText("Invalid Email");
       } else {
@@ -101,32 +90,29 @@ const SignUp = () => {
       }
     }
   };
-  const createAccount = async (data) => {
-    try {
-      const response = await axios.post(
-        `http://localhost:3000/users/create`,
-        data
-      );
-      if (response.data.error) {
-        return { success: false, error: response.data.error };
-      } else {
-        console.log(response.data);
-
-        return { success: true, data: response.data };
-      }
-    } catch (error) {
-      return error;
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { username, email, password } = credentials;
+    if (email === "") {
+      setIsEmailValid(false);
+      setEmailHelperText("Invalid Email");
+      return;
+    }
+    if (username === "") {
+      setIsUsernameValid(false);
+      setUsernameHelperText("Type Username");
+      return;
+    }
+    if (password === "") {
+      setIsPasswordValid(false);
+      setPasswordHelperText("Set your password");
+      return;
+    }
     if (!isUsernameValid || !isEmailValid || !isPasswordValid) {
       return;
     } else {
       setLoader(true);
-      console.log(credentials);
       try {
         const user = await createAccount(credentials);
         if (!user.success) {
@@ -134,7 +120,6 @@ const SignUp = () => {
         } else {
           toast.success("SignUp is successful");
           navigate("/login");
-          console.log(user.data);
           setCredentials({
             username: "",
             email: "",
@@ -230,7 +215,7 @@ const SignUp = () => {
               value={credentials.password}
               name="password"
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"} // Toggle password visibility
               id="password"
               autoComplete="current-password"
               helperText={passwordHelperText}
@@ -242,12 +227,22 @@ const SignUp = () => {
                   },
                 },
               }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={togglePasswordVisibility} edge="end">
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                sx: {
+                  "&.Mui-focused": {
+                    color: "purple", // Change label color on focus
+                  },
+                },
+              }}
               sx={textFields}
             />
-            {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
             <LoadingButton
               type="submit"
               loading={loader}
@@ -276,14 +271,6 @@ const SignUp = () => {
             >
               Sign Up
             </LoadingButton>
-            {/* <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button> */}
             <Box
               className="flex justify-center"
               spacing={1}
@@ -298,16 +285,14 @@ const SignUp = () => {
                 to="/login"
                 variant="body2"
                 sx={{ fontSize: { xs: "14px" }, color: "#ba68c8" }}
-                // className="text-blue-500"
+                className="text-xs md:text-sm"
               >
                 {"Already have an account? Login"}
               </Link>
-              {/* </Grid> */}
             </Box>
           </Box>
         </Box>
       </Box>
-
       <Copyright sx={{ mt: 2 }} />
     </>
   );

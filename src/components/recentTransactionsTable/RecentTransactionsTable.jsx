@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, TableFooter, Typography } from "@mui/material";
+import {  TableFooter, Typography } from "@mui/material";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     // backgroundColor: theme.palette.common.black,
@@ -46,18 +46,6 @@ export default function RecentTransactionsTable({ transactions }) {
     );
   }
 
-  // if (transactions.length === 0) {
-  //   // No accounts found
-  //   return (
-  //     <Typography
-  //       variant="h5"
-  //       align="center"
-  //       sx={{ fontFamily: "Poppins", color: "red" }}
-  //     >
-  //       No transactions found
-  //     </Typography>
-  //   );
-  // }
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 300 }} aria-label="customized table">

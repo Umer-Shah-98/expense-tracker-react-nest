@@ -12,6 +12,7 @@ import { transactionActions } from "../../store/transaction-slice";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { categoryActions } from "../../store/category-slice";
 import { accountActions } from "../../store/account-slice";
+import { addTransaction } from "../../store/transaction-slice";
 
 const ExpenseForm = () => {
   const accounts = useSelector((state) => state.account.accounts);
@@ -114,38 +115,31 @@ const ExpenseForm = () => {
       console.log(transactionDetails);
       try {
         setLoader(true);
-        const response = await axios.post(
-          `http://localhost:3000/transactions/create`,
-          { ...transactionDetails, amount: parseFloat(amount) }
+        const transactionData = {
+          ...transactionDetails,
+          amount: parseFloat(amount),
+        };
+        const categoryData = {
+          type,
+          amount: parseFloat(amount),
+          categoryId,
+        };
+
+        const accountData = {
+          type,
+          amount: parseFloat(amount),
+          accountId,
+          // createdAt: data.createdAt, this must be updated at store in transaction-slice file
+        };
+        const newTransaction = await addTransaction(
+          transactionData,
+          categoryData,
+          accountData
         );
-        const { data } = response;
-        console.log(data);
-        const error = response?.data?.error;
-        console.log(response.data.error);
-        if (error) {
-          throw error;
+        console.log(newTransaction);
+        if (!newTransaction.success) {
+          throw Error(newTransaction.error);
         } else {
-          dispatch(transactionActions.updateTransaction(data));
-          dispatch(
-            categoryActions.updateCategoryAmount({
-              type,
-              amount: parseFloat(amount),
-              categoryId,
-            })
-          );
-
-          //updating account data
-          dispatch(
-            accountActions.updateAccountAmount({
-              type,
-              amount: parseFloat(amount),
-              accountId,
-              createdAt: data.createdAt,
-            })
-          );
-
-          dispatch(transactionActions.updateRecentTransaction(data));
-
           toast.success("Transaction is successful");
           setTransactionDetails({
             ...transactionDetails,
@@ -154,15 +148,53 @@ const ExpenseForm = () => {
             amount: "",
           });
         }
-        console.log(data);
+        // const response = await axios.post(
+        //   `http://localhost:3000/transactions/create`,
+        //   { ...transactionDetails, amount: parseFloat(amount) }
+        // );
+        // const { data } = response;
+        // console.log(data);
+        // const error = response?.data?.error;
+        // console.log(response.data.error);
+        // if (error) {
+        //   throw error;
+        // } else {
+        //   dispatch(transactionActions.updateTransaction(data));
+        //   dispatch(
+        //     categoryActions.updateCategoryAmount({
+        //       type,
+        //       amount: parseFloat(amount),
+        //       categoryId,
+        //     })
+        //   );
+
+        //   //updating account data
+        //   dispatch(
+        //     accountActions.updateAccountAmount({
+        //       type,
+        //       amount: parseFloat(amount),
+        //       accountId,
+        //       createdAt: data.createdAt,
+        //     })
+        //   );
+
+        //   dispatch(transactionActions.updateRecentTransaction(data));
+
+        //   toast.success("Transaction is successful");
+        //   setTransactionDetails({
+        //     ...transactionDetails,
+        //     categoryName: "",
+        //     accountName: "",
+        //     amount: "",
+        //   });
+        // }
+        setLoader(false);
       } catch (error) {
         console.log(error);
-        const errorMessage = error?.response?.data?.message;
-        console.log(errorMessage);
+
         toast.error(`${error}`);
         setLoader(false);
       }
-      setLoader(false);
     }
   };
 

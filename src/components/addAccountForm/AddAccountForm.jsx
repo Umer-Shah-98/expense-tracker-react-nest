@@ -13,6 +13,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { accountActions } from "../../store/account-slice";
+import { createBankAccount } from "../../store/account-slice";
 const AddAccountForm = () => {
   const user = useSelector((state) => state.auth.userData);
   const userData = user?.user;
@@ -33,7 +34,6 @@ const AddAccountForm = () => {
       ...accountDetails,
       [e.target.name]: e.target.value,
     });
-
   };
   const handleAmountBlur = (e) => {
     const value = parseFloat(e.target.value);
@@ -70,16 +70,10 @@ const AddAccountForm = () => {
           balance: parseFloat(balance),
           accountName: accountName.toUpperCase(),
         };
-        const response = await axios.post(
-          `http://localhost:3000/accounts/create`,
-          accountData
-        );
-        const data = response.data;
-        const error = data?.error;
-        if (error) {
-          throw error;
+        const newAccount = await createBankAccount(accountData);
+        if (!newAccount.success) {
+          throw Error(newAccount.error);
         } else {
-          dispatch(accountActions.updateAccount(data));
           toast.success("Account is added successfully");
           setAccountDetails({
             ...accountDetails,
@@ -102,7 +96,7 @@ const AddAccountForm = () => {
         <Typography
           variant="h5"
           align="center"
-          sx={{ fontFamily: "Poppins", fontWeight: "medium",color:'purple' }}
+          sx={{ fontFamily: "Poppins", fontWeight: "medium", color: "purple" }}
         >
           Add Account
         </Typography>

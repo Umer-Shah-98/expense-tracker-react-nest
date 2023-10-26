@@ -18,13 +18,14 @@ import {
   Container,
   FormControl,
 } from "@mui/material";
-import LoginIcon from '@mui/icons-material/Login';
+import LoginIcon from "@mui/icons-material/Login";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { emailPattern } from "../../../utils";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { loginUser } from "../../../store/auth-slice";
 import SaveIcon from "@mui/icons-material/Save";
 import axios from "axios";
 // import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -52,9 +53,9 @@ const Login = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "password") {
-      if (value.length < 5) {
+      if (value.length < 6) {
         setIsPasswordValid(false);
-        setPasswordHelperText("Password must be at least 5 characters long");
+        setPasswordHelperText("Password must be at least 6 characters long");
       } else {
         setIsPasswordValid(true);
         setPasswordHelperText("");
@@ -67,15 +68,7 @@ const Login = () => {
       };
     });
   };
-  const styles = {
-    signUpHeader: {
-      display: "flex",
-      flexDirection: { md: "row" },
-    },
-    textFields: {
-      width: { xs: "10rem" },
-    },
-  };
+
   const handleBlur = (e) => {
     const { name, value } = e.target;
     const emailRegex = emailPattern;
@@ -90,9 +83,9 @@ const Login = () => {
       }
     }
     if (name === "password") {
-      if (value.length < 5) {
+      if (value.length < 6) {
         setIsPasswordValid(false);
-        setPasswordHelperText("Password must be at least 5 characters long");
+        setPasswordHelperText("Password must be at least 6 characters long");
       } else {
         setIsPasswordValid(true);
         setPasswordHelperText("");
@@ -100,20 +93,6 @@ const Login = () => {
     }
   };
 
-  //login functionality
-  const loginUser = async (data) => {
-    try {
-      const response = await axios.post(
-        `http://localhost:3000/users/login`,
-        data
-      );
-
-      return { success: true, data: response.data };
-    } catch (error) {
-      console.log(error);
-      return { success: false, error: error.response.data.message };
-    }
-  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = credentials;
@@ -129,11 +108,8 @@ const Login = () => {
         const user = await loginUser(credentials);
         const userData = user.data;
         if (user.success) {
-          localStorage.setItem("user", JSON.stringify(userData));
-          dispatch(authActions.addUser(userData));
           toast.success("Logged in successfully");
           navigate("/dashboard");
-          console.log(userData);
         } else {
           const error = user.error;
           toast.error(error);
@@ -181,12 +157,9 @@ const Login = () => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={credentials.email}
-              //  sx={styles.textFields}
               id="email"
               label="Email Address"
               name="email"
-              // autoComplete="email"
-              // autoFocus
               error={!isEmailValid}
               helperText={emailHelperText}
               InputLabelProps={{
@@ -210,7 +183,6 @@ const Login = () => {
                 label="Password"
                 type={showPassword ? "text" : "password"} // Toggle password visibility
                 id="password"
-                // autoComplete="current-password"
                 helperText={passwordHelperText}
                 error={!isPasswordValid}
                 InputLabelProps={{
@@ -237,10 +209,6 @@ const Login = () => {
                 sx={textFields}
               />
             </FormControl>
-            {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
             <LoadingButton
               type="submit"
               loading={loader}
@@ -269,14 +237,6 @@ const Login = () => {
             >
               Login
             </LoadingButton>
-            {/* <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button> */}
             <Box
               className="flex justify-center"
               spacing={1}
@@ -290,12 +250,11 @@ const Login = () => {
               <Link
                 to="/signup"
                 variant="body2"
-                sx={{ fontSize: { xs: "14px" }, color: "#ba68c8" }}
-                // className="text-blue-500"
+                sx={{ color: "#ba68c8" }}
+                className="text-xs md:text-sm"
               >
                 {"Don't have an account? Sign Up"}
               </Link>
-              {/* </Grid> */}
             </Box>
           </Box>
         </Box>
