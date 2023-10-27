@@ -21,6 +21,7 @@ import { fetchAccounts } from "../../../store/account-slice";
 import { fetchCategories } from "../../../store/category-slice";
 import { fetchTransactions } from "../../../store/transaction-slice";
 import { fetchRecentTransactions } from "../../../store/transaction-slice";
+import Categories from "../../categories/Categories";
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.userData);
   const categories = useSelector((state) => state.category.categories);
@@ -64,7 +65,7 @@ const Dashboard = () => {
     fetchRecentTransactions(userId).catch((error) =>
       toast.error(`${error.error}`)
     );
-  }, [user]);
+  }, []);
 
   return (
     <>
@@ -128,8 +129,8 @@ const Dashboard = () => {
           <RecentTransactionsTable transactions={recentTransactions} />
         </Box>
       </Box>
-
-      <Box className="mt-3">
+<Categories categories={categories}></Categories>
+      {/* <Box className="mt-3">
         <Box className="m-5">
           <Typography
             variant="h4"
@@ -267,12 +268,12 @@ const Dashboard = () => {
           </Grid>
           <AddCategoryForm></AddCategoryForm>
         </Box>
-        {(totalIncomeAmount > 0 || totalExpenseAmount > 0) && (
-          <Box className="pie-chart w-full flex justify-center mt-10">
-            <PieChart data={data}></PieChart>
-          </Box>
-        )}
-      </Box>
+      </Box> */}
+      {(totalIncomeAmount > 0 || totalExpenseAmount > 0) && (
+        <Box className="pie-chart w-full flex justify-center mt-10">
+          <PieChart data={data}></PieChart>
+        </Box>
+      )}
     </>
   );
 };

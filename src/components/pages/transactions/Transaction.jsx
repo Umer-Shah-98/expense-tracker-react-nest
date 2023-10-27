@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import {  useSelector } from "react-redux";
 import TransactionsTable from "../../transactionTable/TransactionTable";
 import { Typography } from "@mui/material";
-import {  useSelector } from "react-redux";
 const Transaction = () => {
   const user = useSelector((state) => state.auth.userData);
   const transactions = useSelector((state) => state.transaction.transactions);
