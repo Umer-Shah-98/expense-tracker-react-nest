@@ -1,8 +1,5 @@
 import { Box, CardMedia, Typography } from "@mui/material";
 import React from "react";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import PaidIcon from "@mui/icons-material/Paid";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 const AmountCard = ({
   cardColor,
   iconWrapperColor,
@@ -13,7 +10,7 @@ const AmountCard = ({
   totalAmount,
   incomeRatio,
   expenseRatio,
-  isRandomIcon=false ,
+  isRandomIcon = false,
   catRandomIcon,
 }) => {
   return (
@@ -50,10 +47,6 @@ const AmountCard = ({
           >
             {cardIcon}
             {isRandomIcon && <img src={catRandomIcon} />}
-            {/* <AccountBalanceWalletIcon
-              fontSize="large"
-              sx={{ color: "white" }}
-            /> */}
           </Box>
           <Box className="flex flex-col">
             <Typography

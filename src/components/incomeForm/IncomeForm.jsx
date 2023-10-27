@@ -67,8 +67,6 @@ const IncomeForm = () => {
       });
     }
 
-    // Log the updated transactionDetails
-    console.log(transactionDetails);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,8 +98,6 @@ const IncomeForm = () => {
     }
 
     if (amount && accountName && categoryName) {
-      console.log("submit");
-      console.log(transactionDetails);
       try {
         setLoader(true);
         const transactionData = {
@@ -125,7 +121,6 @@ const IncomeForm = () => {
           categoryData,
           accountData
         );
-        console.log(newTransaction);
         if (!newTransaction.success) {
           throw Error(newTransaction.error);
         } else {

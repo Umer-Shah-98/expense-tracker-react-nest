@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import InstagramIcon from "../../assets/insta.png";
 import { Button, TextField, Typography, Box } from "@mui/material";
 import { toast } from "react-toastify";
+import Copyright from "../copyright/Copyright";
 const Footer = ({ focusOnScroll }) => {
   const currentYear = new Date().getFullYear();
   return (

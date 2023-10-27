@@ -122,8 +122,6 @@ export default function AccountsTable({ accounts }) {
                   {account?.balance.toFixed(2)}
                 </StyledTableCell>
                 <StyledTableCell align="right">{date}</StyledTableCell>
-                {/* <StyledTableCell align="right">{account.carbs}</StyledTableCell>
-              <StyledTableCell align="right">{account.protein}</StyledTableCell> */}
               </StyledTableRow>
             );
           })}

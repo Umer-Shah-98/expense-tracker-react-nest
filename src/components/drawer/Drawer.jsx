@@ -7,29 +7,20 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
-import HomeIcon from "@mui/icons-material/Home";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import PaidIcon from "@mui/icons-material/Paid";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Accounts from "../pages/accounts/Accounts";
 import Transaction from "../pages/transactions/Transaction";
 import { useDispatch } from "react-redux";
-import { authActions } from "../../store/auth-slice";
 import { Footer } from "../footer/Footer";
 import { logoutUser } from "../../store/auth-slice";
 const drawerWidth = 170;
@@ -134,20 +125,6 @@ export default function MyDrawer() {
             </Typography>
           </Button>
         </Toolbar>
-        {/* <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Persistent drawer
-          </Typography>
-        </Toolbar> */}
       </AppBar>
       <Drawer
         sx={{
@@ -192,7 +169,6 @@ export default function MyDrawer() {
               borderRadius: "5px",
             },
           }}
-          // startIcon={<SpaceDashboardIcon sx={{ color: "white" }} />}
           onClick={() => {
             setMenuData("Dashboard");
           }}
@@ -226,7 +202,6 @@ export default function MyDrawer() {
               backgroundColor: "#991a99",
             },
           }}
-          // startIcon={<AccountBalanceIcon sx={{ color: "white" }} />}
           onClick={() => {
             setMenuData("Accounts");
           }}
@@ -260,7 +235,6 @@ export default function MyDrawer() {
               backgroundColor: "#991a99",
             },
           }}
-          // startIcon={<PaidIcon sx={{ color: "white" }} />}
           onClick={() => {
             setMenuData("Transactions");
           }}
@@ -279,37 +253,6 @@ export default function MyDrawer() {
             </Typography>
           </Box>
         </IconButton>
-
-        {/* <List sx={{ backgroundColor: "purple", color: "white" }}>
-          {["Dashboard", "Accounts", "Transactions"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon onClick={()=>{console.log("ki");}}>
-                  {text === "Dashboard" ? (
-                    <IconButton onClick={() => {
-                      console.log("dashboard");
-                      setMenuData("dashboard")}}>
-                      <SpaceDashboardIcon sx={{ color: "white" }} />
-                    </IconButton>
-                  ) : text === "Accounts" ? (
-                    <IconButton onClick={handleShowAccountsPage}>
-                      <AccountBalanceIcon sx={{ color: "white" }} />
-                    </IconButton>
-                  ) : text === "Transactions" ? (
-                    <IconButton onClick={() => setMenuData("transactions")}>
-                      <PaidIcon sx={{ color: "white" }} />
-                    </IconButton>
-                  ) : (
-                    <MailIcon />
-                  )}
-                </ListItemIcon>
-
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
-        {/* <Divider /> */}
       </Drawer>
       <Main open={open}>
         <DrawerHeader />

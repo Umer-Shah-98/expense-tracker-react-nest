@@ -1,6 +1,6 @@
 import React from "react";
-import { Typography,Box,Container } from "@mui/material";
-const Header = ({pageHeading}) => {
+import { Typography, Box, Container } from "@mui/material";
+const Header = ({ pageHeading }) => {
   return (
     <>
       <Container className="">
@@ -8,7 +8,11 @@ const Header = ({pageHeading}) => {
           <Box>
             <Typography
               variant="h2"
-              sx={{ fontWeight: "bold", fontSize: { xs: "16px", sm: "30px" },fontFamily:'Poppins'}}
+              sx={{
+                fontWeight: "bold",
+                fontSize: { xs: "16px", sm: "30px" },
+                fontFamily: "Poppins",
+              }}
             >
               Expense Tracker App
             </Typography>
@@ -16,7 +20,11 @@ const Header = ({pageHeading}) => {
           <Box>
             <Typography
               variant="h3"
-              sx={{ fontWeight: "bold", fontSize: { xs: "12px", sm: "22px" },fontFamily:'Poppins' }}
+              sx={{
+                fontWeight: "bold",
+                fontSize: { xs: "12px", sm: "22px" },
+                fontFamily: "Poppins",
+              }}
             >
               {pageHeading}
             </Typography>

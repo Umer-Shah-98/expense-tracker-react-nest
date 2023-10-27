@@ -21,9 +21,7 @@ const ExpenseForm = () => {
   const user = useSelector((state) => state.auth.userData);
   const userData = user?.user;
   const userId = userData?.id;
-  console.log(accounts);
-  console.log(categories);
-  console.log(transactions);
+
   const [transactionDetails, setTransactionDetails] = useState({
     amount: "",
     categoryId: "",
@@ -74,9 +72,6 @@ const ExpenseForm = () => {
         [name]: value,
       });
     }
-
-    // Log the updated transactionDetails
-    console.log(transactionDetails);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -111,8 +106,6 @@ const ExpenseForm = () => {
     }
 
     if (amount && accountName && categoryName) {
-      console.log("submit");
-      console.log(transactionDetails);
       try {
         setLoader(true);
         const transactionData = {
@@ -136,7 +129,6 @@ const ExpenseForm = () => {
           categoryData,
           accountData
         );
-        console.log(newTransaction);
         if (!newTransaction.success) {
           throw Error(newTransaction.error);
         } else {

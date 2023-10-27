@@ -10,8 +10,6 @@ import Layout from "./components/layout/Layout";
 function App() {
   return (
     <div>
-      {/* <SignUp></SignUp>
-      <Login></Login> */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<SignUp />} />

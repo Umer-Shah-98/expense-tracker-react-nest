@@ -1,9 +1,3 @@
-import PaidIcon from "@mui/icons-material/Paid";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import CatIcon1 from "../assets/cat-icon-1.png";
 import CatIcon2 from "../assets/cat-icon-2.png";
 import CatIcon3 from "../assets/cat-icon-3.png";
@@ -62,15 +56,12 @@ export const colorPairs = [
   { name: "Deep Orange", iconWrapperColor: "#E64A19", cardColor: "#FFCCBC" },
 ];
 
-// Define an array of possible icons for categories
-// export const randomIcons = [
-//   { icon: <MonetizationOnIcon fontSize="large" sx={{ color: "white" }} /> },
-//   { icon: <AddShoppingCartIcon fontSize="large" sx={{ color: "white" }} /> },
-
-// <AttachMoneyIcon fontSize="large" sx={{ color: "white" }} />,
-// <PaidIcon fontSize="large" sx={{ color: "white" }} />,
-// <CurrencyExchangeIcon fontSize="large" sx={{ color: "white" }} />,
-// <ShoppingCartCheckoutIcon fontSize="large" sx={{ color: "white" }} />,
-// <AddShoppingCartIcon fontSize="large" sx={{ color: "white" }} />,
-// ];
-export const randomIcons = [CatIcon1, CatIcon2, CatIcon3, CatIcon4, CatIcon5,CatIcon6, CatIcon7];
+export const randomIcons = [
+  CatIcon1,
+  CatIcon2,
+  CatIcon3,
+  CatIcon4,
+  CatIcon5,
+  CatIcon6,
+  CatIcon7,
+];

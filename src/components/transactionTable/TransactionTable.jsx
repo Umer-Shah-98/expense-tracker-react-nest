@@ -152,9 +152,6 @@ export default function TransactionsTable({ transactions }) {
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           className="flex justify-center"
-          // sx={{
-          //   margin: "auto", // Center-align the TablePagination component
-          // }}
         />
       )}
     </TableContainer>

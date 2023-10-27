@@ -3,15 +3,12 @@ import { Typography, Box, FormControl, TextField } from "@mui/material";
 import { textFields } from "../../styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { toast } from "react-toastify";
-import { categoryActions } from "../../store/category-slice";
 import { addCategory } from "../../store/category-slice";
 const AddCategoryForm = () => {
   const user = useSelector((state) => state.auth.userData);
   const userData = user?.user;
   const userId = userData?.id;
-  const dispatch = useDispatch();
   const [categoryDetails, setCategoryDetails] = useState({
     categoryName: "",
     userId: userId,
@@ -128,7 +125,6 @@ const AddCategoryForm = () => {
                 }}
                 sx={textFields}
               />{" "}
-              {/* <FormHelperText>With label + helper text</FormHelperText> */}
             </FormControl>
             <Box
               sx={{ display: "flex", justifyContent: { md: "center" }, mt: 2 }}
