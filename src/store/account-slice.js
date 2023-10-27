@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { dispatch } from "./index.js";
+import { deployedURL } from "./index.js";
 const totalBalance = (accounts) => {
   return accounts.reduce((total, account) => total + account.balance, 0);
 };
@@ -67,7 +68,7 @@ export default accountSlice;
 export const fetchAccounts = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:3000/accounts/find_all/${id}`
+      `${deployedURL}accounts/find_all/${id}`
     );
     const accounts = response.data;
     dispatch(accountActions.addAccount(accounts));
@@ -80,7 +81,7 @@ export const fetchAccounts = async (id) => {
 export const createBankAccount = async (accountData) => {
   try {
     const response = await axios.post(
-      `http://localhost:3000/accounts/create`,
+      `${deployedURL}accounts/create`,
       accountData
     );
     const data = response.data;

@@ -22,7 +22,7 @@ import { PieChart } from "../../chart/PieChart";
 import { fetchAccounts } from "../../../store/account-slice";
 import { fetchCategories } from "../../../store/category-slice";
 import { fetchTransactions } from "../../../store/transaction-slice";
-
+import { fetchRecentTransactions } from "../../../store/transaction-slice";
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.userData);
   const categories = useSelector((state) => state.category.categories);
@@ -46,24 +46,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [categoriesNotFound, setCategoriesNotFound] = useState(false);
 
-  const fetchRecentTransactions = async (id) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/transactions/recent/${id}`
-      );
-      const data = response.data;
-      const error = data.error;
-      if (error) {
-        throw error;
-      } else {
-        dispatch(transactionActions.addRecentTransaction(data));
-        return data;
-      }
-    } catch (error) {
-      toast.error(`${error}`);
-    }
-  };
-
   useEffect(() => {
     const userData = user?.user;
     const userId = userData?.id;
@@ -81,7 +63,9 @@ const Dashboard = () => {
         }
       })
       .catch((error) => toast.error(`${error}`));
-    fetchRecentTransactions(userId);
+    fetchRecentTransactions(userId).catch((error) =>
+      toast.error(`${error.error}`)
+    );
   }, [user]);
 
   return (

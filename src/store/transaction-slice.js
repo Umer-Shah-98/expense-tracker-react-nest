@@ -3,6 +3,7 @@ import axios from "axios";
 import { dispatch } from ".";
 import { categoryActions } from "./category-slice";
 import { accountActions } from "./account-slice";
+import { deployedURL } from "./index.js";
 const transactionSlice = createSlice({
   name: "transaction",
   initialState: {
@@ -38,9 +39,6 @@ const transactionSlice = createSlice({
     addRecentTransaction(state, action) {
       const transactions = action.payload;
       state.recentTransactions = transactions;
-      // Recalculate the total income and expense amounts
-      // state.totalIncomeAmount = calculateTotalAmount(transactions, "INCOME");
-      // state.totalExpenseAmount = calculateTotalAmount(transactions, "EXPENSE");
     },
     updateRecentTransaction(state, action) {
       const newTransactions = action.payload;
@@ -68,7 +66,7 @@ export default transactionSlice;
 export const fetchTransactions = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:3000/transactions/find_all/${id}`
+      `${deployedURL}transactions/find_all/${id}`
     );
     const data = response.data;
     const error = data.error;
@@ -92,7 +90,7 @@ export const addTransaction = async (
 ) => {
   try {
     const response = await axios.post(
-      `http://localhost:3000/transactions/create`,
+      `${deployedURL}transactions/create`,
       transactionData
     );
     const data = response.data;
@@ -120,6 +118,25 @@ export const addTransaction = async (
     }
   } catch (error) {
     console.log(error);
+    return { success: false, error: error };
+  }
+};
+
+//fetching recent transaction from Database
+
+export const fetchRecentTransactions = async (id) => {
+  try {
+    const response = await axios.get(`${deployedURL}transactions/recent/${id}`);
+    const data = response.data;
+    const error = data.error;
+    if (error) {
+      throw error;
+    } else {
+      dispatch(transactionActions.addRecentTransaction(data));
+      return { success: true, data: data };
+    }
+  } catch (error) {
+    // toast.error(`${error}`);
     return { success: false, error: error };
   }
 };

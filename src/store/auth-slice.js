@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useDispatch as useAppDispatch } from "react-redux";
 import { dispatch } from "./index.js";
+import { deployedURL } from "./index.js";
 import axios from "axios";
 const user = JSON.parse(localStorage.getItem("user"));
 const baseURL = "https://defiant-galoshes-lion.cyclic.app/";
@@ -28,10 +29,7 @@ export default authSlice;
 // signuUp functionality
 export const createAccount = async (data) => {
   try {
-    const response = await axios.post(
-      `http://localhost:3000/users/create`,
-      data
-    );
+    const response = await axios.post(`${deployedURL}users/create`, data);
     if (response?.data?.error) {
       return { success: false, error: response.data.error };
     } else {
@@ -49,7 +47,7 @@ export const loginUser = async (data) => {
   console.log("login fn");
   // const dispatch = useDispatch();
   try {
-    const response = await axios.post(`${baseURL}users/login`, data);
+    const response = await axios.post(`${deployedURL}users/login`, data);
     const user = response?.data;
     localStorage.setItem("user", JSON.stringify(user));
     console.log("auth-slice");

@@ -148,46 +148,6 @@ const ExpenseForm = () => {
             amount: "",
           });
         }
-        // const response = await axios.post(
-        //   `http://localhost:3000/transactions/create`,
-        //   { ...transactionDetails, amount: parseFloat(amount) }
-        // );
-        // const { data } = response;
-        // console.log(data);
-        // const error = response?.data?.error;
-        // console.log(response.data.error);
-        // if (error) {
-        //   throw error;
-        // } else {
-        //   dispatch(transactionActions.updateTransaction(data));
-        //   dispatch(
-        //     categoryActions.updateCategoryAmount({
-        //       type,
-        //       amount: parseFloat(amount),
-        //       categoryId,
-        //     })
-        //   );
-
-        //   //updating account data
-        //   dispatch(
-        //     accountActions.updateAccountAmount({
-        //       type,
-        //       amount: parseFloat(amount),
-        //       accountId,
-        //       createdAt: data.createdAt,
-        //     })
-        //   );
-
-        //   dispatch(transactionActions.updateRecentTransaction(data));
-
-        //   toast.success("Transaction is successful");
-        //   setTransactionDetails({
-        //     ...transactionDetails,
-        //     categoryName: "",
-        //     accountName: "",
-        //     amount: "",
-        //   });
-        // }
         setLoader(false);
       } catch (error) {
         console.log(error);

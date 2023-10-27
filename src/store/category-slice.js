@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { dispatch } from "./index.js";
+import { deployedURL } from "./index.js";
 const categorySlice = createSlice({
   name: "category",
   initialState: {
@@ -56,7 +57,7 @@ export default categorySlice;
 export const fetchCategories = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:3000/categories/find_all/${id}`
+      `${deployedURL}categories/find_all/${id}`
     );
     const categories = response.data;
     const error = response?.data?.error;
@@ -78,7 +79,7 @@ export const fetchCategories = async (id) => {
 export const addCategory = async (categoryData) => {
   try {
     const response = await axios.post(
-      `http://localhost:3000/categories/create`,
+      `${deployedURL}categories/create`,
       categoryData
     );
     const { data } = response;

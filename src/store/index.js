@@ -11,7 +11,8 @@ const store = configureStore({
 });
 
 export const { dispatch } = store;
-
+export const localURL='http://localhost:3000/'
+export const deployedURL='https://defiant-galoshes-lion.cyclic.app/'
 const useDispatch = () => useAppDispatch();
 
 export default store;
