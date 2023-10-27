@@ -94,7 +94,6 @@ export const addTransaction = async (
       transactionData
     );
     const data = response.data;
-    console.log(data);
     const error = data?.error;
     console.log(error);
     if (error) {

@@ -48,7 +48,7 @@ const AmountCard = ({
             {cardIcon}
             {isRandomIcon && <img src={catRandomIcon} />}
           </Box>
-          <Box className="flex flex-col">
+          <Box className="flex flex-col items-center">
             <Typography
               variant="h6"
               sx={{
@@ -67,7 +67,7 @@ const AmountCard = ({
                   sx={{
                     fontFamily: "Poppins",
                     fontWeight: "medium",
-                    fontSize: { xs: "8px", md: "14px" },
+                    fontSize: { xs: "8px", md: "12px" },
                   }}
                 >
                   Total Rs. {totalAmount}
@@ -75,7 +75,7 @@ const AmountCard = ({
                 <Typography
                   align="center"
                   sx={{
-                    fontSize: "12px",
+                    fontSize: { xs: "8px", md: "12px" },
                     fontFamily: "Poppins",
                     fontWeight: "medium",
                   }}
@@ -87,7 +87,7 @@ const AmountCard = ({
                 </Typography>
                 <Typography
                   sx={{
-                    fontSize: "12px",
+                    fontSize: { xs: "8px", md: "12px" },
                     fontFamily: "Poppins",
                     fontWeight: "medium",
                   }}
